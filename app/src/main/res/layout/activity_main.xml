@@ -4,15 +4,15 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="activity" type="com.strange.kam6512.strange.MainActivity"/>
+        <variable name="activity" type="com.strange.kam6512.strange.view.MainActivity"/>
     </data>
 
     <android.support.v4.widget.DrawerLayout
             android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            tools:openDrawer="start">
+            android:fitsSystemWindows="true">
+        <!--tools:openDrawer="start">-->
 
         <android.support.design.widget.CoordinatorLayout
                 android:layout_width="match_parent"
@@ -37,16 +37,14 @@
                     android:layout_height="match_parent"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     tools:showIn="@layout/activity_main"
-                    tools:context="com.strange.kam6512.strange.MainActivityKt">
+                    tools:context="com.strange.kam6512.strange.view.MainActivity">
 
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hello World!"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"/>
+                <com.strange.kam6512.strange.view.DrawView
+                        android:id="@+id/draw"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        tools:context="com.strange.kam6512.strange.view.MainActivity">
+                </com.strange.kam6512.strange.view.DrawView>
 
             </android.support.constraint.ConstraintLayout>
 

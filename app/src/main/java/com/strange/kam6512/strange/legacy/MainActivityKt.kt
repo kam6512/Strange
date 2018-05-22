@@ -1,4 +1,4 @@
-package com.strange.kam6512.strange
+package com.strange.kam6512.strange.legacy
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.strange.kam6512.strange.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivityKt : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
