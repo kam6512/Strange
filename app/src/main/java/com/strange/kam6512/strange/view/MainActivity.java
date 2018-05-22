@@ -27,9 +27,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void setViews() {
-        binding.fab.setOnClickListener(view -> {
-            Snackbar.make(view, "", Snackbar.LENGTH_LONG).setAction("Action", view1 -> binding.draw.log()).show();
-        });
+        binding.fab.setOnClickListener(view -> binding.draw.reset());
         DrawerLayout drawerLayout = binding.drawerLayout;
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, binding.toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);

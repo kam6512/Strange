@@ -41,8 +41,9 @@
 
                 <com.strange.kam6512.strange.view.DrawView
                         android:id="@+id/draw"
-                        android:layout_height="match_parent"
-                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:background="#333"
                         tools:context="com.strange.kam6512.strange.view.MainActivity">
                 </com.strange.kam6512.strange.view.DrawView>
 

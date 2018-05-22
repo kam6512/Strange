@@ -5,16 +5,17 @@ import android.graphics.*;
 import android.graphics.Path.Direction;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import hugo.weaving.DebugLog;
 
 //https://stackoverflow.com/questions/16650419/draw-in-canvas-by-finger-android
 public class DrawView extends View {
 
+    private boolean isDrawed = false;
+
     private static final float TOUCH_TOLERANCE = 4;
 
+    private static int SIZE = 0;
     private float x, y;
 
     private Canvas canvas;
@@ -23,6 +24,8 @@ public class DrawView extends View {
 
     private Brush brush;
     private Cursor cursor;
+
+    private Brush brush1;
 
     public DrawView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -43,6 +46,7 @@ public class DrawView extends View {
         paint = new Paint(Paint.DITHER_FLAG);
         brush = new Brush();
         cursor = new Cursor();
+        brush1 = new Brush();
     }
 
 
@@ -53,9 +57,12 @@ public class DrawView extends View {
         canvas = new Canvas(paper);
     }
 
-    @DebugLog
-    public void log() {
-        Log.i("DrawView", "hey!");
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int size = Math.min(getMeasuredWidth(), getMeasuredHeight());
+        setMeasuredDimension(size, size);
+        SIZE = size;
     }
 
     @Override
@@ -63,12 +70,14 @@ public class DrawView extends View {
         super.onDraw(canvas);
 
         canvas.drawBitmap(paper, 0, 0, paint);
-        canvas.drawPath(brush.brushPath, brush.brushPaint);
-        canvas.drawPath(cursor.circlePath, cursor.circlePaint);
+        brush.drawPathOnCanvas(canvas);
+        cursor.drawPathOnCanvas(canvas);
+        brush1.drawPathOnCanvas(canvas);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (isDrawed) return true;
         float x = event.getX();
         float y = event.getY();
 
@@ -84,6 +93,7 @@ public class DrawView extends View {
             case MotionEvent.ACTION_UP:
                 endTouch();
                 invalidate();
+                isDrawed = true;
                 break;
         }
         return true;
@@ -93,6 +103,7 @@ public class DrawView extends View {
     private void startTouch(float x, float y) {
         brush.start(x, y);
         movePosition(x, y);
+        brush1.start(SIZE - x, SIZE - y);
     }
 
     private void moveTouch(float x, float y) {
@@ -106,9 +117,10 @@ public class DrawView extends View {
     }
 
     private void endTouch() {
-        brush.end(this.x, this.y);
-        canvas.drawPath(brush.brushPath, brush.brushPaint);
         cursor.resetCursor();
+        brush.end(this.x, this.y);
+        brush.drawPathOnCanvas(canvas);
+        brush.reset();
     }
 
     private void movePosition(float x, float y) {
@@ -116,9 +128,14 @@ public class DrawView extends View {
         this.y = y;
     }
 
+    void reset() {
+        isDrawed = false;
+        canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+    }
+
     private class Brush {
-        Paint brushPaint;
-        Path brushPath;
+        private Paint brushPaint;
+        private Path brushPath;
 
         Brush() {
 
@@ -137,6 +154,10 @@ public class DrawView extends View {
             brushPaint.setStrokeWidth(12);
         }
 
+        void drawPathOnCanvas(Canvas canvas) {
+            canvas.drawPath(brushPath, brushPaint);
+        }
+
         void start(float x, float y) {
             brushPath.reset();
             brushPath.moveTo(x, y);
@@ -148,6 +169,9 @@ public class DrawView extends View {
 
         void end(float x, float y) {
             brushPath.lineTo(x, y);
+        }
+
+        void reset() {
             brushPath.reset();
         }
     }
@@ -155,8 +179,8 @@ public class DrawView extends View {
     private class Cursor {
         private int radius;
         private Direction direction;
-        Path circlePath;
-        Paint circlePaint;
+        private Path circlePath;
+        private Paint circlePaint;
 
         Cursor() {
             radius = 30;
@@ -174,6 +198,10 @@ public class DrawView extends View {
             circlePaint.setStrokeWidth(4f);
         }
 
+        void drawPathOnCanvas(Canvas canvas) {
+            canvas.drawPath(circlePath, circlePaint);
+        }
+
 
         void moveCursor(float x, float y) {
             resetCursor();
@@ -183,8 +211,5 @@ public class DrawView extends View {
         void resetCursor() {
             circlePath.reset();
         }
-
     }
-
 }
-
